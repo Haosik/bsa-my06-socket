@@ -7,22 +7,24 @@
 	<link rel="stylesheet" href="material/material.min.css">
 	<link rel="stylesheet" href="style.css">
 </head>
+<script src="/socket.io/socket.io.js"></script>
+
 
 <body>
 	<div class="modal-bg js-shown" id="modal-bg"></div>
 	<div class="modal enter-nick__modal" id="nickname-modal">
-			<form class="nick-form" action="" id="nickname-form">
-				<h4>Enter your name and nickname*</h4>
-				<div class="input-div mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input class="input-name mdl-textfield__input" name="q-name" type="text" id="name-input">
-					<label class="input-label mdl-textfield__label" for="name-input">Your name</label>
-				</div>
-				<div class="input-div mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input class="input-nick mdl-textfield__input" name="q-nick" type="text" id="nickname-input" value="Lapidus">
-					<label class="input-label mdl-textfield__label" for="nickname-input">Nickname (>3 symbols. No spaces)</label>
-				</div>
-				<input type="submit" class="mdl-button mdl-button--raised mdl-button--accent" value="Submit nickname" id="submit-nickname">
-			</form>
+		<form class="nick-form" action="" id="nickname-form">
+			<h4>Enter your name and nickname*</h4>
+			<div class="input-div mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input class="input-name mdl-textfield__input" name="q-name" type="text" id="name-input">
+				<label class="input-label mdl-textfield__label" for="name-input">Your name</label>
+			</div>
+			<div class="input-div mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input class="input-nick mdl-textfield__input" name="q-nick" type="text" id="nickname-input" value="Lapidus">
+				<label class="input-label mdl-textfield__label" for="nickname-input">Nickname (>3 symbols. No spaces)</label>
+			</div>
+			<input type="submit" class="mdl-button mdl-button--raised mdl-button--accent" value="Submit nickname" id="submit-nickname">
+		</form>
 	</div>
 
 	<div class="container">
@@ -31,13 +33,14 @@
 			<h2 class="chat-header" id="chat-header">CHAT</h2>
 			<ul id="chat-messages"></ul>
 			<form class="message-form" id="message-form" action="">
-				
+
 				<div class="input-div mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<textarea class="input-msg  mdl-textfield__input" name="q-message" type="text" rows="3" id="input-msg"></textarea>
+					<input type="text" class="input-msg  mdl-textfield__input" name="q-message" type="text" rows="3" id="input-msg">
 					<label class="input-label mdl-textfield__label" for="input-msg">Text lines...</label>
 				</div>
 				<input type="submit" class="mdl-button mdl-button--raised mdl-button--accent" id="submit-message" value="Send message">
 			</form>
+			<div class="typing-message" id="typing-message"></div>
 		</div>
 	</div>
 	<script src="material/material.min.js"></script>

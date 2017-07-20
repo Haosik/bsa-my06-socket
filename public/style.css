@@ -170,3 +170,11 @@ body {
 	margin-bottom: 10px;
 	padding-left: 10px;
 }
+
+.typing-message {
+	position: absolute;
+	z-index: 2;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+}
