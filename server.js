@@ -21,7 +21,6 @@ db.once('open', function () {
 const messageService = require('./services/message');
 
 let usersInChat = [];
-let numUsers = 0;
 
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -35,7 +34,6 @@ app.get('/', (req, res, next) => {
 
 //Socket CONNECTED
 io.on('connection', (socket) => {
-	let addedUser = false;
 	console.log('a user connected!');
 
 	//CHAT MESSAGE 
@@ -44,30 +42,24 @@ io.on('connection', (socket) => {
 	});
 
 	// when the client emits 'add user', this listens and executes
-	socket.on('add user', function (username) {
-		if (addedUser) return;
+	socket.on('add user', function (user) {
 
 		// we store the username in the socket session for this client
-		socket.username = username;
-		++numUsers;
-		addedUser = true;
-		socket.emit('login', {
-			numUsers: numUsers
-		});
+		socket.userName, socket.userNick = user;
+
+		if (!usersInChat.includes(socket.userNick)) {
+			usersInChat.push(socket.userNick);
+		}
 
 		// echo globally (all clients) that a person has connected
-		socket.broadcast.emit('user joined', {
-			username: socket.userName,
-			usernick: socket.adapter.userNick,
-			numUsers: numUsers
-		});
+		socket.broadcast.emit('user joined', usersInChat);
+		socket.emit('user joined', usersInChat);
+
 	});
 
 	// when the client emits 'typing', we broadcast it to others
-	socket.on('typing', function () {
-		socket.broadcast.emit('typing', {
-			usernick: socket.userNick
-		});
+	socket.on('typing', function (userNick) {
+		socket.broadcast.emit('typing', userNick);
 	});
 
 	// when the client emits 'stop typing', we broadcast it to others
@@ -78,9 +70,17 @@ io.on('connection', (socket) => {
 	});
 
 	//Socket DISCONNECTED
-	socket.on('disconnect', function () {
+	socket.on('disconnect', function (userNick) {
 		console.log('user disconnected');
+		if (usersInChat.includes(socket.userNick)) {
+			usersInChat.splice(usersInChat.indexOf(socket.userNick), 1);
+			socket.broadcast.emit('user joined', usersInChat);
+		}
+		socket.broadcast.emit('user joined', usersInChat);
 	});
+	// socket.on('user disconnected', function(userNick) {
+
+	// })
 })
 
 // app.post('/', (req, res, next) => {

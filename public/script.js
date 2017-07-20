@@ -40,13 +40,16 @@ nicknameForm.addEventListener("submit", function (e) {
 		modalBg.classList.add('js-hidden');
 		nicknameModal.classList.add('js-hidden');
 		chatHeader.innerHTML = `Hello, ${name} @${userNick}!`;
-		console.log(userNick);
+
 		// ajaxRequest({
 		// 	method: 'POST',
 		// 	url: '/',
 		// 	data: {userNick: userNick}
 		// });
-		socket.emit('add user', userNick);
+		socket.emit('add user', {
+			userName,
+			userNick
+		});
 	} else {
 		nicknameInput.classList.add('not-valid');
 	}
@@ -79,6 +82,7 @@ messageInput.oninput = (e) => {
 		userNick
 	});
 	let typingTime = setTimeout(() => {
+		clearTimeout(typingTime);
 		socket.emit('stop typing');
 	}, 1500);
 }
@@ -96,13 +100,20 @@ socket.on('chat message', function (msg) {
 	chatMessages.appendChild(li);
 });
 
+socket.on('user joined', function (usersInChat) {
+	usersList.innerHTML = "";
+	usersInChat.forEach((user, ind) => {
+		let userDiv = document.createElement('div');
+		userDiv.innerHTML = `<span>@${user.userNick}</span>`;
+		userDiv.classList.add('user-div');
+		usersList.appendChild(userDiv);
+	})
+});
+
 // Adds the visual chat typing message
 function addChatTyping(data) {
 	let typingMessage = document.getElementById('typing-message');
 	typingMessage.innerText = `${data.userNick} is typing...`
-	// data.typing = true;
-	// data.message = 'is typing';
-	// addChatMessage(data);
 }
 // Removes the visual chat typing message
 function removeChatTyping() {
@@ -111,15 +122,15 @@ function removeChatTyping() {
 }
 // Whenever the server emits 'typing', show the typing message
 socket.on('typing', function (data) {
-	data = {
-		userNick
-	};
 	addChatTyping(data);
 });
 socket.on('stop typing', function (data) {
 	removeChatTyping();
 });
 
+socket.on('disconnect', function(userNick) {
+	socket.emit('user disconnected', userNick);
+});
 // window.onbeforeunload = function() {
 // 	ajaxRequest({
 // 		method: 'DELETE',
@@ -174,10 +185,10 @@ socket.on('stop typing', function (data) {
 // chatMessages.appendChild(li);
 // 			}
 // 			for (let x in users) {
-// 				let userDiv = document.createElement('div');
-// 				userDiv.innerHTML = `<span>@${users[x]}</span>`;
-// 				userDiv.classList.add('user-div');
-// 				usersList.appendChild(userDiv);
+// let userDiv = document.createElement('div');
+// userDiv.innerHTML = `<span>@${users[x]}</span>`;
+// userDiv.classList.add('user-div');
+// usersList.appendChild(userDiv);
 // 			}
 // 		}
 // 	})
