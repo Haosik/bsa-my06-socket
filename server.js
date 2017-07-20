@@ -51,9 +51,22 @@ io.on('connection', (socket) => {
 			usersInChat.push(socket.userNick);
 		}
 
+
+		let messages = [];
+
+		messageService.findAllMessages((err, data) => {
+			if (!err) {
+				messages = [...data];
+				socket.emit('user joined', {
+					usersInChat,
+					messages
+				});
+			}
+		})
+
 		// echo globally (all clients) that a person has connected
 		socket.broadcast.emit('user joined', usersInChat);
-		socket.emit('user joined', usersInChat);
+
 
 	});
 
@@ -97,17 +110,17 @@ io.on('connection', (socket) => {
 
 
 // app.get('/messages', (req, res, next) => {
-// 	messageService.findAllMessages((err, data) => {
-// 		if (!err) {
-// 			let respData = {
-// 				data,
-// 				usersInChat
-// 			}
-// 			res.send(JSON.stringify(respData));
-// 			return
+// messageService.findAllMessages((err, data) => {
+// 	if (!err) {
+// 		let respData = {
+// 			data,
+// 			usersInChat
 // 		}
-// 		next(err);
-// 	})
+// 		res.send(JSON.stringify(respData));
+// 		return
+// 	}
+// 	next(err);
+// })
 // });
 
 // app.post('/messages', (req, res, next) => {

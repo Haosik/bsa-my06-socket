@@ -100,13 +100,27 @@ socket.on('chat message', function (msg) {
 	chatMessages.appendChild(li);
 });
 
-socket.on('user joined', function (usersInChat) {
+socket.on('user joined', function (respData) {
+	console.log(respData);
 	usersList.innerHTML = "";
-	usersInChat.forEach((user, ind) => {
+	respData.usersInChat.forEach((user, ind) => {
 		let userDiv = document.createElement('div');
 		userDiv.innerHTML = `<span>@${user.userNick}</span>`;
 		userDiv.classList.add('user-div');
 		usersList.appendChild(userDiv);
+	});
+	respData.messages.forEach((msg, ind) => {
+		let li = document.createElement('li');
+		li.innerHTML = `<span class="chat-msg__name">${msg.userName}</span>
+				 <span class="chat-msg__nick">@${msg.userNick}
+				  <span class="chat-msg__date">(${new Date(msg.date).toLocaleString()})
+				</span> <div class="chat-msg__text">${msg.text}</div>`;
+		li.classList.add('chat-msg__wrap');
+		if (msg.text.includes('@' + userNick)) {
+			li.classList.add('private-message')
+		}
+
+		chatMessages.appendChild(li);
 	})
 });
 
@@ -128,7 +142,7 @@ socket.on('stop typing', function (data) {
 	removeChatTyping();
 });
 
-socket.on('disconnect', function(userNick) {
+socket.on('disconnect', function (userNick) {
 	socket.emit('user disconnected', userNick);
 });
 // window.onbeforeunload = function() {
