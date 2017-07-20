@@ -37,8 +37,19 @@ io.on('connection', (socket) => {
 	console.log('a user connected!');
 
 	//CHAT MESSAGE 
+	let newMsg = {};
 	socket.on('chat message', function (msg) {
-		io.emit('chat message', msg);
+		messageService.saveMessage(msg, (err, data) => {
+			if (!err) {
+				socket.broadcast.emit('chat message', msg);
+				socket.emit('chat message', msg);
+			}
+			console.log(err);
+		})
+
+		// io.broadcast.emit('chat message', {msg});
+
+
 
 	});
 

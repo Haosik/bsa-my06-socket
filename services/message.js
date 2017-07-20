@@ -19,6 +19,7 @@ module.exports = {
 		Message.create(newMsg, (err, data) => {
 			if (!err) {
 				console.log('Message saved to db!');
+				callback(null, data);
 				return
 			}
 			callback(err);

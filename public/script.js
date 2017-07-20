@@ -30,6 +30,7 @@ nicknameInput.addEventListener("keydown", (e) => {
 		e.preventDefault();
 	}
 });
+
 nicknameForm.addEventListener("submit", function (e) {
 	e.preventDefault();
 	//At least 3 symbols for nick and no spaces
@@ -45,6 +46,8 @@ nicknameForm.addEventListener("submit", function (e) {
 			userName,
 			userNick
 		});
+
+		chatMessages.scrollTop = chatMessages.scrollHeight;
 	} else {
 		nicknameInput.classList.add('not-valid');
 	}
@@ -87,31 +90,36 @@ socket.on('chat message', function (msg) {
 	if (msg.text.includes('@' + userNick)) {
 		li.classList.add('private-message')
 	}
-	chatMessages.appendChild(li);
+	let chatMsgsFirstChild = chatMessages.firstChild;
+	chatMessages.insertBefore(li, chatMsgsFirstChild);
 });
 
 socket.on('user joined', function (respData) {
 	console.log(respData);
 	usersList.innerHTML = "";
-	respData.usersInChat.forEach((user, ind) => {
-		let userDiv = document.createElement('div');
-		userDiv.innerHTML = `<span>@${user.userNick}</span>`;
-		userDiv.classList.add('user-div');
-		usersList.appendChild(userDiv);
-	});
-	respData.messages.forEach((msg, ind) => {
-		let li = document.createElement('li');
-		li.innerHTML = `<span class="chat-msg__name">${msg.userName}</span>
+	if (typeof respData.usersInChat !== 'undefined') {
+		respData.usersInChat.forEach((user, ind) => {
+			let userDiv = document.createElement('div');
+			userDiv.innerHTML = `<span>@${user.userNick}</span>`;
+			userDiv.classList.add('user-div');
+			usersList.appendChild(userDiv);
+		});
+	}
+	if (typeof respData.messages !== 'undefined') {
+		respData.messages.forEach((msg, ind) => {
+			let li = document.createElement('li');
+			li.innerHTML = `<span class="chat-msg__name">${msg.userName}</span>
 				 <span class="chat-msg__nick">@${msg.userNick}
 				  <span class="chat-msg__date">(${new Date(msg.date).toLocaleString()})
 				</span> <div class="chat-msg__text">${msg.text}</div>`;
-		li.classList.add('chat-msg__wrap');
-		if (msg.text.includes('@' + userNick)) {
-			li.classList.add('private-message')
-		}
+			li.classList.add('chat-msg__wrap');
+			if (msg.text.includes('@' + userNick)) {
+				li.classList.add('private-message')
+			}
 
-		chatMessages.appendChild(li);
-	})
+			chatMessages.appendChild(li);
+		})
+	}
 });
 
 // Adds the visual chat typing message
