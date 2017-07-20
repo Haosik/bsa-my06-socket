@@ -39,6 +39,7 @@ io.on('connection', (socket) => {
 	//CHAT MESSAGE 
 	socket.on('chat message', function (msg) {
 		io.emit('chat message', msg);
+
 	});
 
 	// when the client emits 'add user', this listens and executes
@@ -91,48 +92,7 @@ io.on('connection', (socket) => {
 		}
 		socket.broadcast.emit('user joined', usersInChat);
 	});
-	// socket.on('user disconnected', function(userNick) {
-
-	// })
 })
-
-// app.post('/', (req, res, next) => {
-// 	console.log(req.body.userNick);
-// 	usersInChat.push(req.body.userNick);
-// 	res.send();
-// });
-
-// app.delete('/', (req, res, next) => {
-// 	console.log(req.body.userNick);
-// 	usersInChat.splice(usersInChat.indexOf(req.body.userNick), 1);
-// 	// res.send();
-// });
-
-
-// app.get('/messages', (req, res, next) => {
-// messageService.findAllMessages((err, data) => {
-// 	if (!err) {
-// 		let respData = {
-// 			data,
-// 			usersInChat
-// 		}
-// 		res.send(JSON.stringify(respData));
-// 		return
-// 	}
-// 	next(err);
-// })
-// });
-
-// app.post('/messages', (req, res, next) => {
-// 	messageService.saveMessage(req.body, (err, data) => {
-// 		if (!err) {
-// 			res.send(200);
-// 			return
-// 		}
-// 		next(err);
-// 	})
-// });
-
 
 
 app.use((req, res, next) => {
