@@ -122,6 +122,14 @@ socket.on('user joined', function (respData) {
 	}
 });
 
+socket.on('user disconnected', function (userNick) {
+	let li = document.createElement('li');
+	li.innerHTML = `<span class="chat-msg__user-left">${userNick.userNick} has left the chat :(</span>`;
+	li.classList.add('chat-msg__wrap');
+	let chatMsgsFirstChild = chatMessages.firstChild;
+	chatMessages.insertBefore(li, chatMsgsFirstChild);
+});
+
 // Adds the visual chat typing message
 function addChatTyping(data) {
 	let typingMessage = document.getElementById('typing-message');

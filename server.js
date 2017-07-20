@@ -100,6 +100,7 @@ io.on('connection', (socket) => {
 		if (usersInChat.includes(socket.userNick)) {
 			usersInChat.splice(usersInChat.indexOf(socket.userNick), 1);
 			socket.broadcast.emit('user joined', usersInChat);
+			socket.broadcast.emit('user disconnected', socket.userNick);
 		}
 		socket.broadcast.emit('user joined', usersInChat);
 	});
