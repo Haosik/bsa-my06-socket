@@ -95,7 +95,6 @@ socket.on('chat message', function (msg) {
 });
 
 socket.on('user joined', function (respData) {
-	console.log(respData);
 	usersList.innerHTML = "";
 	if (typeof respData.usersInChat !== 'undefined') {
 		respData.usersInChat.forEach((user, ind) => {

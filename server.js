@@ -47,10 +47,6 @@ io.on('connection', (socket) => {
 			console.log(err);
 		})
 
-		// io.broadcast.emit('chat message', {msg});
-
-
-
 	});
 
 	// when the client emits 'add user', this listens and executes
@@ -62,7 +58,6 @@ io.on('connection', (socket) => {
 		if (!usersInChat.includes(socket.userNick)) {
 			usersInChat.push(socket.userNick);
 		}
-
 
 		let messages = [];
 
