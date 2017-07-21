@@ -99,7 +99,7 @@ socket.on('user joined', function (respData) {
 	if (typeof respData.usersInChat !== 'undefined') {
 		respData.usersInChat.forEach((user, ind) => {
 			let userDiv = document.createElement('div');
-			userDiv.innerHTML = `<span>@${user.userNick}</span>`;
+			userDiv.innerHTML = `<span>@${user}</span>`;
 			userDiv.classList.add('user-div');
 			usersList.appendChild(userDiv);
 		});
@@ -123,7 +123,7 @@ socket.on('user joined', function (respData) {
 
 socket.on('user disconnected', function (userNick) {
 	let li = document.createElement('li');
-	li.innerHTML = `<span class="chat-msg__user-left">${userNick.userNick} has left the chat :(</span>`;
+	li.innerHTML = `<span class="chat-msg__user-left">${userNick} has left the chat :(</span>`;
 	li.classList.add('chat-msg__wrap');
 	let chatMsgsFirstChild = chatMessages.firstChild;
 	chatMessages.insertBefore(li, chatMsgsFirstChild);

@@ -53,7 +53,9 @@ io.on('connection', (socket) => {
 	socket.on('add user', function (user) {
 
 		// we store the username in the socket session for this client
-		socket.userName, socket.userNick = user;
+		socket.userName = user.userName;
+		socket.userNick = user.userNick;
+
 
 		if (!usersInChat.includes(socket.userNick)) {
 			usersInChat.push(socket.userNick);
