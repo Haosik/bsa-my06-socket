@@ -95,13 +95,25 @@ socket.on('chat message', function (msg) {
 });
 
 socket.on('user joined', function (respData) {
+	console.log(respData);
+	console.log(respData.usersInChat);
+	console.log(respData.messages);
+	console.log(respData.usersJustJoined);
 	usersList.innerHTML = "";
 	if (typeof respData.usersInChat !== 'undefined') {
 		respData.usersInChat.forEach((user, ind) => {
 			let userDiv = document.createElement('div');
 			userDiv.innerHTML = `<span>@${user}</span>`;
 			userDiv.classList.add('user-div');
+			if (respData.usersJustJoined.length > 0 && respData.usersJustJoined.includes(user)) {
+				userDiv.classList.add('just-joined');
+			}
 			usersList.appendChild(userDiv);
+
+			let justJoinedMessage = document.createElement('div');
+			justJoinedMessage.innerHTML = 'User just joined. All hail him!'
+			justJoinedMessage.classList.add('just-joined-msg');
+			userDiv.appendChild(justJoinedMessage);
 		});
 	}
 	if (typeof respData.messages !== 'undefined') {
@@ -115,7 +127,6 @@ socket.on('user joined', function (respData) {
 			if (msg.text.includes('@' + userNick)) {
 				li.classList.add('private-message')
 			}
-
 			chatMessages.appendChild(li);
 		})
 	}

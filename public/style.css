@@ -170,7 +170,14 @@ body {
 	margin-bottom: 10px;
 	padding-left: 10px;
 }
-
+.user-div .just-joined-msg {
+	display: none;
+	font-size: 12px;
+	font-weight: 300;
+}
+.user-div.just-joined .just-joined-msg {
+	display: block;
+}
 .typing-message {
 	position: absolute;
 	z-index: 2;

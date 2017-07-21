@@ -21,6 +21,7 @@ db.once('open', function () {
 const messageService = require('./services/message');
 
 let usersInChat = [];
+let usersJustJoined = [];
 
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -51,7 +52,7 @@ io.on('connection', (socket) => {
 
 	// when the client emits 'add user', this listens and executes
 	socket.on('add user', function (user) {
-
+		
 		// we store the username in the socket session for this client
 		socket.userName = user.userName;
 		socket.userNick = user.userNick;
@@ -60,6 +61,15 @@ io.on('connection', (socket) => {
 		if (!usersInChat.includes(socket.userNick)) {
 			usersInChat.push(socket.userNick);
 		}
+		if (!usersJustJoined.includes(socket.userNick)) {
+			usersJustJoined.push(socket.userNick);
+			setTimeout(() => {
+				usersJustJoined.splice(usersJustJoined.indexOf(socket.userNick), 1);
+				socket.emit('user joined', {usersInChat, usersJustJoined});
+				socket.broadcast.emit('user joined', {usersInChat, usersJustJoined});
+			}, 5000)
+		}
+		
 
 		let messages = [];
 
@@ -68,13 +78,14 @@ io.on('connection', (socket) => {
 				messages = [...data];
 				socket.emit('user joined', {
 					usersInChat,
-					messages
+					messages,
+					usersJustJoined
 				});
 			}
 		})
 
 		// echo globally (all clients) that a person has connected
-		socket.broadcast.emit('user joined', usersInChat);
+		socket.broadcast.emit('user joined', {usersInChat, usersJustJoined});
 
 
 	});
