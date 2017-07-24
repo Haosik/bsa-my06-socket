@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
 				socket.broadcast.emit('chat message', msg);
 				socket.emit('chat message', msg);
 			}
-			console.log(err);
+			// console.log(err);
 		})
 
 	});
